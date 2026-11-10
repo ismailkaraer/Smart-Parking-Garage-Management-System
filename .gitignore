@@ -1,0 +1,10 @@
+# Local builds
+/build/
+/cmake-build-*/
+/parking-garage
+/compile_commands.json
+
+# CLion and macOS
+/.idea/
+*.iml
+.DS_Store
