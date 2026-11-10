@@ -1,0 +1,31 @@
+name: Build and smoke test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+
+      - name: Compile with C++20
+        run: c++ -std=c++20 -Wall -Wextra -pedantic src/*.cpp -o parking-garage
+
+      - name: Verify demo output
+        shell: bash
+        run: |
+          ./parking-garage | tee output.txt
+          grep -Fx "Available Spots: 2" output.txt
+          grep -Fx "Parking Fee: 90 TL" output.txt
+          grep -Fx "Parking Fee: 54 TL" output.txt
+          grep -Fx "Total Revenue: 144 TL" output.txt
+          grep -Fx "Total Vehicles Created: 2" output.txt
+          grep -Fx "ERROR: Vehicle not found." output.txt
